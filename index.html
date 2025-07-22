@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neem Tree Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(rgba(232,245,233,0.85), rgba(232,245,233,0.85)),
+                  url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 40px auto;
+      background: rgba(255,255,255,0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    h1, h2 {
+      color: #2e7d32;
+      text-shadow: 1px 1px #c8e6c9;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: #4e342e;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: #388e3c;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .btn:hover {
+      background-color: #2e7d32;
+    }
+
+    #page2 {
+      display: none;
+    }
+
+    canvas {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Page 1 -->
+    <div id="page1">
+      <h1>🌳 Litchi Tree (लीची)</h1>
+      <p><strong>Planted by:</strong> Shivam (शिवम )</p>
+      <p><strong>Date of Planting:</strong> 13/07/2025</p>
+      <p id="age"></p>
+      <button class="btn" onclick="showPage2()">Know More</button>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page2">
+      <h2>🌿 Environmental Impact</h2>
+      <p id="co2"></p>
+      <p id="o2"></p>
+      <canvas id="impactChart" width="400" height="250"></canvas>
+      <button class="btn" onclick="showPage1()">← Back</button>
+    </div>
+  </div>
+
+  <script>
+    const plantingDate = new Date("2025-07-12");
+    const today = new Date();
+    const ageInDays = Math.floor((today - plantingDate) / (1000 * 60 * 60 * 24));
+    const years = ageInDays / 365.25;
+
+    // Display plant age
+    document.getElementById("age").textContent = `🌱 Age of Plant: ${ageInDays} days (${years.toFixed(2)} years)`;
+
+    // Calculate impact
+    const co2Absorbed = (.5 * years).toFixed(2); // kg/year
+    const o2Released = (.23 * years).toFixed(2); // kg/year
+
+    function showPage2() {
+      document.getElementById("page1").style.display = "none";
+      document.getElementById("page2").style.display = "block";
+
+      document.getElementById("co2").textContent = `Estimated CO₂ Absorbed: ${co2Absorbed} kg`;
+      document.getElementById("o2").textContent = `Estimated O₂ Released: ${o2Released} kg`;
+
+      const ctx = document.getElementById('impactChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['CO₂ Absorbed', 'O₂ Released'],
+          datasets: [{
+            label: 'Environmental Impact (kg)',
+            data: [co2Absorbed, o2Released],
+            backgroundColor: ['#66bb6a', '#81c784']
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 5
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function showPage1() {
+      document.getElementById("page2").style.display = "none";
+      document.getElementById("page1").style.display = "block";
+    }
+  </script>
+</body>
+</html>
